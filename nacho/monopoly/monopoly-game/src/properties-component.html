@@ -1,0 +1,345 @@
+<link rel="import" href="/bower_components/polymer/polymer-element.html">
+<link rel="import" href="/bower_components/polymer/lib/elements/dom-repeat.html">
+<link rel="import" href="/bower_components/polymer/lib/elements/dom-if.html">
+
+<dom-module id="properties-component">
+  <template>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-size: 16px;
+      }
+      section{
+        padding: 20px;
+        background: #dfdfdf;
+      }
+      .content{
+        text-align: center;
+        max-width: 950px;
+        margin: 0 auto;
+      }
+      .content__title{
+        color: #FF2029;
+        text-transform: uppercase;
+        text-align: justify;
+        margin-top: 20px;
+        margin-bottom: 25px;
+      }
+      hr{
+        border-top: 1px solid #FF2029;
+      }
+      .content__title span{
+        display: block;
+        font-size: 1.875em;
+        line-height: .875em;
+      }
+      .content__items{
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        grid-gap: 20px;
+        margin-top: 30px;
+        margin-bottom: 30px;
+      }
+      .item{
+        background-color: #fff;
+        border-radius: 5px;
+        padding-bottom: 15px;
+      }
+      .item_img{
+        text-align: center;
+        min-width: 200px;
+        min-height: 130px;
+        padding-top: 10px;
+      }
+      img{
+        margin: 0 auto;
+        border-radius: 5px;
+        max-width: 200px;
+        max-height: 105px;
+      }
+      .item_description{
+        font-weight: 700;
+        margin: 0 2%;
+        overflow: hidden;
+        height: 40px;
+        color: black;
+        margin-top: 8px !important;
+      }
+      .item_cta{
+        background: #FF2029;
+        border-radius: 3px;
+        color: #fff;
+        display: block;
+        margin: 10px 2%;
+        padding: 6px 0;
+        text-align: center;
+        text-transform: uppercase;
+      }
+      .item_cta:hover{
+        background: #BF151B;
+        text-decoration: underline;
+        cursor: pointer;
+      }
+      
+      .hidden{
+        display: none;
+      }
+      .hipotecada{
+        color: #FF2029;
+        text-align: center;
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+      .content__coffee{
+        display: inline-block;
+      }
+      .img__coffee{
+        width: 20px;
+      }
+    </style>
+    <section>
+      <div class="content">
+        <h1 class="content__title"><span>[[title_component]]</span></h1>
+        <hr>
+        <div class="content__items">
+            
+            <template class="hidden" is="dom-repeat" items="[[properties]]" as="property">
+              <div style="width: 220px;">
+                <div class="item">
+                  <div class="item_img" style="background-color: [[property.colorGroup]]">
+                    <img class="promo-image" src="[[property.url]]" alt="[[property.name]]" title="[[property.name]]">
+                  </div>
+                  <p class="item_description">[[property.name]]</p>
+
+                  <template class="hidden" is="dom-if" if="[[!property.isMortgage]]">
+                    <span on-click="_setMortgage" data-index$="[[index]]" data-id$="[[property]]" class="item_cta">hipotecar</span>
+                    <template class="hidden" is="dom-if" if="[[!_canBuy(property.colorGroup,property.groupSize)]]">
+                      <span on-click="_buyCoffeeShop" data-index$="[[index]]" data-id$="[[property]]" class="item_cta">Comprar Casa</span>
+                    </template>
+                  </template>
+                  <template class="hidden" is="dom-if" if="[[property.isMortgage]]">
+                    <p class="hipotecada">Hipotecada</p>
+                  </template>
+
+                  <template class="hidden" is="dom-repeat" items="[[_hasCoffee(property.coffeeShops)]]">
+                    <div class="content__coffee">
+                      <img class="img__coffee" src="../assets/casa.png" alt="Cafes" title="Cafes">
+                    </div>
+                  </template>
+                </div>
+              </div>
+            </template>
+
+        </div>
+      </div>
+    </section>
+  </template>
+  <script>
+    (function propertiesComponent(customElements){
+      'use strict';
+
+      class PropertiesComponent extends Polymer.Element {
+        static get is() { return 'properties-component'; }
+        static get properties() {
+          return {
+            idUser:{
+              type:String,
+              value:"4"
+            },
+            groupSize:{
+              type:Object,
+              value:{}
+            },
+            properties:{
+              type:Array,
+              value: [{
+                "id": "9",
+                "name": "Atenas",
+                "type": "property",
+                "owner": "4",
+                "url": "",
+                "action": "null",
+                "actionValue": "null",
+                "colorGroup": "lightblue",
+                "groupSize": 3,
+                "price": "1200",
+                "rent": [
+                  "80",
+                  "400",
+                  "100",
+                  "3000",
+                  "4500",
+                  "6000"
+                ],
+                "coffeeShops": 0,
+                "coffeShopPrice": "600",
+                "isMortgage": false,
+                "mortgageValue": "500"
+              },
+              {
+                "id": "8",
+                "name": "Barcelona",
+                "type": "property",
+                "owner": "4",
+                "url": "",
+                "action": "null",
+                "actionValue": "null",
+                "colorGroup": "lightblue",
+                "groupSize": 3,
+                "price": "1000",
+                "rent": [
+                  "60",
+                  "300",
+                  "900",
+                  "2700",
+                  "4000",
+                  "5500",
+                ],
+                "coffeeShops": 0,
+                "coffeShopPrice": "500",
+                "isMortgage": false,
+                "mortgageValue": "500"
+              },
+              {
+                "id":"6",
+                "name":"Tokio",
+                "type": "property",
+                "owner": "0",
+                "url": "",
+                "action": "null",
+                "actionValue": "null",
+                "colorGroup": "lightblue",
+                "groupSize":"3",
+                "price": "1000",
+                "rent": [
+                  "60",
+                  "300",
+                  "900",
+                  "2700",
+                  "4000",
+                  "5500"
+                ],
+                "coffeeShops": 0,
+                "coffeShopPrice": "500",
+                "isMortgage": false,
+                "mortgageValue": "500"
+              },
+              {
+                "id": "3",
+                "name": "Taipei",
+                "type": "property",
+                "owner": "4",
+                "url": "",
+                "action": "null",
+                "actionValue": "null",
+                "colorGroup": "brown",
+                "groupSize": 2,
+                "price": "600",
+                "rent": [
+                  "40",
+                  "200",
+                  "600",
+                  "1800",
+                  "3200",
+                  "4500"
+                ],
+                "coffeeShops": 0,
+                "coffeShopPrice": "500",
+                "isMortgage": false,
+                "mortgageValue": "300"
+              }]
+            }
+          }
+        }
+
+        connectedCallback() {
+          super.connectedCallback();
+          this._responseAjax();
+        }
+
+        _responseAjax(){
+
+          //get all properties filter only my properties and type properties
+          this.properties.forEach(element => {
+            if(element.colorGroup == 'transport'){
+              element.url = '../assets/train.png';
+            }else{
+              element.url = '../assets/city.jpg';
+            }
+            this.groupSize[element.colorGroup] = (this.groupSize[element.colorGroup]||0) + 1;
+          });
+          
+          this.title_component = 'Propiedades';
+          if(!this.properties.length){
+            this.title_component = 'Sin propiedades';
+          }
+        }
+
+        _setMortgage(event){
+          let property = JSON.parse(event.target.dataset.id);
+          console.log(property);
+          
+          console.log(property.id);
+          //function update data from api set property isMortgage con true
+          //this._setMortgageService(property.id);
+
+          console.log(property.mortgageValue);
+          //function update data from api set new value money in User
+          //this._setRateUser(property.mortgageValue);
+          
+
+          property.isMortgage = true;
+          property.url = '../assets/hipoteca.png';
+          this.set(`properties.${event.target.dataset.index}`,property);
+          
+
+          this._executeDispatchEvent('mortgage','Se agrego dinero a este usuario');
+        }
+        
+        _canBuy(color,size){
+          return size - this.groupSize[color];
+        }
+
+        _buyCoffeeShop(event){
+          let property = JSON.parse(event.target.dataset.id);
+          if(property.coffeeShops == property.rent.length){
+            alert('Ya no puedes comprar mas casas');
+            return;
+          }
+          
+          console.log(property);
+          console.log(property.id);
+          //function update data from api set property coffeeShops add 1
+          //this._buyCoffeeShopService(property.id);
+
+          console.log(property.coffeShopPrice);
+          //function update data from api set new value money in User
+          //this._setRateUser(property.coffeShopPrice);
+          property.coffeeShops++;
+
+          this.set(`properties.${event.target.dataset.index}`,property);
+
+          this._executeDispatchEvent('coffeShops','Se resto dinero a este usuario');
+        }
+
+        _hasCoffee(value){
+          return new Array(value);
+        }
+
+        _executeDispatchEvent(event,message,bubbles = true){
+          this.dispatchEvent(new CustomEvent(event,{
+            bubbles: bubbles,
+            detail:{
+              message: message
+            }
+          }));
+        }
+
+        
+      }
+      customElements.define(PropertiesComponent.is, PropertiesComponent);
+    })(window.customElements);
+  </script>
+</dom-module>
